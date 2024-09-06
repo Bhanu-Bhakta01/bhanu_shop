@@ -1,0 +1,109 @@
+{% extends "../base.html" %}
+{% block title %}Cart{% endblock title %}
+{% load static %}
+{% block content %}
+    <!-- Page Add Section Begin -->
+    <section class="page-add cart-page-add">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="page-breadcrumb">
+                        <h4>Cart : <span>{{cart | length}}</span></h4>
+                        
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    <!-- Page Add Section End -->
+{% if cart %}
+    <!-- Cart Page Section Begin -->
+    <div class="cart-page">
+        <div class="container">
+            <div class="cart-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="product-h">Product</th>
+                            <th>Price</th>
+                            <th class="quan">Quantity</th>
+                            <th>Sub-Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart %}
+                        {% with product=item.product %}
+                        <tr>
+                            <td class="product-col">
+                                <img style='width:100px;height:100px' src="{{product.thumbnail}}" alt="">
+                                <div class="p-title">
+                                    <h5>{{product.title}}</h5>
+                                </div>
+                            </td>
+                            <td class="price-col">${{product.price | floatformat:'2'}}</td>
+                            <td class="quantity-col">
+
+                                <div class="pro-qty">
+                                    <!--add link tag for adding url(?product_id={{product.id}}&&quantity=-1)-->
+                                    <a href="?product_id={{product.id}}&&quantity=-1">
+                                        <span class="dec qtybtn">-</span>
+                                    </a>
+                                    <input disabled type="text" value="{{item.quantity}}">
+                                    <!--add link tag for adding url(?product_id={{product.id}}&&quantity=-1)-->
+                                    <a href="?product_id={{product.id}}&&quantity=1">
+                                        <span class="dec qtybtn">+</span>
+                                    </a>
+                                </div>
+                            </td>
+                            <td class="total">${{item.subtotal | floatformat:'2'}}</td>
+                            <td class="product-close ">
+                                <!--add link tag for adding url(?product_id={{product.id}}&&quantity=-1)-->
+                                    <a class="text-decoration none text-dark" href="?product_id={{product.id}}&&quantity=-{{item.quantity}}">X</a>
+                                </td>
+                        </tr>
+                        {% endwith %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr>
+                <h4 class='text-center' >
+                    <strong>Total =</strong> $ {{cart.total|floatformat:2}} <!---Here cart.total are come from cart.py file its a function def total-->
+                </h4>
+            </div>
+            <div class="cart-btn">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <!--Here for add coupon form in html-->
+                        <form action="{% url "add-coupon" %}" method="POST">
+                            {% csrf_token %}
+                            <div class="coupon-input">
+                                <input type="text" name='coupon' placeholder="Enter cupone code">
+                            </div>
+                        </form>
+                        <!------------------------------------->
+                    </div>
+                    <div class="col-lg-5 offset-lg-1 text-left text-lg-right">
+                        <a href="?clear=True">
+                            <div class="site-btn clear-btn">Clear Cart</div>
+                        </a>
+                        <a href="#">
+                            <div class="site-btn clear-btn">Check Out</div>
+                        </a>
+                    </div>
+                    
+                     
+                        
+                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <!-- Cart Page Section End -->
+    {% else %}
+    {% include "no_result.html" %}
+    {% endif %}
+{% endblock content %}
+

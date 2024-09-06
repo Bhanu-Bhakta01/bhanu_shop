@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Product-Details{% endblock title %}
+{% load static %}
+{% block content %}
+
+    <!-- Page Add Section Begin -->
+    {% comment %} <section class="page-add">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="page-breadcrumb">
+                        <h2>Shirts<span>.</span></h2>
+                        <a href="#">Home</a>
+                        <a href="#">Dresses</a>
+                        <a class="active" href="#">Night Dresses</a>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <img src="{% static 'img/add.jpg' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </section> {% endcomment %}
+    <!-- Page Add Section End -->
+
+    <!-- Product Page Section Beign -->
+    <section class="product-page">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product-slider owl-carousel">
+                        <div class="product-img">
+                            <figure>
+                                <img height='380px;' src="{{product.thumbnail}}" alt="">
+                                <div class="p-status">new</div>
+                            </figure>
+                        </div>
+                        <div class="product-img">
+                            <figure>
+                                <img height='380px;' src="{{product.thumbnail}}" alt="">
+                                <div class="p-status">new</div>
+                            </figure>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-lg-6">
+                    <div class="product-content">
+                        <h2>{{product.title|title}}</h2>
+                        <div class="pc-meta">
+                            <h5>${{product.price}}</h5>
+                            {% if product.in_stock %}
+                                <h5>In Stock</h5>
+                            {% else  %}
+                                <h5>Out of Stock</h5>
+                            {% endif %}
+                            {% comment %} <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div> {% endcomment %}
+                        </div>
+                        <p> {{product.description}} </p>
+                        <ul class="tags">
+                            <li><span>Category :</span> {{product.category.title}}</li>
+                            {% comment %} <li><span>Tags :</span> man, shirt, dotted, elegant, cool</li> {% endcomment %}
+                        </ul>
+                        {% if product.in_stock %}
+                        <form action="{% url "add-to-cart" product.id %}" method="POST">
+                            {% csrf_token %}
+
+                            <button style="cursor:pointer;" href="#" class="primary-btn pc-btn">Add to cart</button>
+                        </form>
+                        {% endif %}
+  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Product Page Section End -->
+
+    <!-- Related Product Section Begin -->
+    <section class="related-product spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="section-title">
+                        <h2>Related Products</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {% for rel_product in related_product %}
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-product-item">
+                        <figure>
+                            <a href="{% url 'product-details' rel_product.slug %}"><img style='height:200px;' src="{{rel_product.thumbnail}}" alt=""></a>
+                            <div class="p-status">new</div>
+                        </figure>
+                        <div class="product-text">
+                            <a href="{% url 'product-details' rel_product.slug %}"><p>${{rel_product.title}}</p></a>
+                            <p>${{rel_product.price}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- Related Product Section End -->
+
+    {% endblock content %}
